@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: two-tier-app-deployment
+  labels:
+    app: two-tier-app
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: two-tier-app
+  template:
+    metadata:
+      labels:
+        app: two-tier-app
+    spec:
+      containers:
+        - name: two-tier-app-ctr
+          image: thisisyatingarg/flaskapp:latest
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: Always
+          env:
+            - name: MYSQL_HOST
+              value: "10.97.186.226"    #This IP get from mysql svc [after apply the mysql svc file and get IP in the ClusterIP section of mysql svc]
+            - name: MYSQL_USER
+              value: "root"
+            - name: MYSQL_PASSWORD
+              value: "admin"
+            - name: MYSQL_DB
+              value: "mydb"
